@@ -28,10 +28,9 @@ const QuestionSchema = new Schema({
     options: [OptionSchema],
     solution: { type: String },
     title: { type: String, required: true },
-    siblingId: { type: Schema.Types.ObjectId }, // or ref: 'Question' if you need references
+    siblingId: { type: Schema.Types.ObjectId }, 
 }, { timestamps: true });
 
-// Optional text index for searching the title
 QuestionSchema.index({ title: 'text' });
 
 export default mongoose.model('Question', QuestionSchema);

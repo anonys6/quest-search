@@ -3,29 +3,24 @@ syntax = "proto3";
 package questsearch;
 
 service QuestionsService {
-  // Search for questions
   rpc SearchQuestions (SearchRequest) returns (SearchResponse);
 }
 
-// The request carrying query & pagination
 message SearchRequest {
   string query = 1;
   int32 pageNumber = 2;
   int32 pageSize = 3;
-  string questionType = 4; // e.g. "ANAGRAM", "MCQ", etc.
+  string questionType = 4;
 }
 
-// The response with the questions and some pagination info
 message SearchResponse {
   repeated Question questions = 1;
   int32 totalCount = 2;
   int32 totalPages = 3;
 }
 
-// Minimal fields for a question
 message Question {
   string id = 1;
   string type = 2;
   string title = 3;
-  // Add others if you want
 }

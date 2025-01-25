@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-dotenv.config(); // loads .env
+dotenv.config();
 
 export async function connectToMongo() {
     if (!process.env.MONGODB_URI) {

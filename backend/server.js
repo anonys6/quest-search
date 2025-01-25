@@ -1,4 +1,3 @@
-// server.js (modified)
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,7 +16,6 @@ const __dirname = path.dirname(__filename);
 async function main() {
     await connectToMongo();
 
-    // 1) Setup gRPC definitions (like before)
     const PROTO_PATH = path.join(__dirname, 'proto', 'questions.proto');
     const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
         keepCase: true,
@@ -29,7 +27,6 @@ async function main() {
     const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
     const questsearch = protoDescriptor.questsearch;
 
-    // 2) Implementation
     const questionsServiceImpl = {
         SearchQuestions: async (call, callback) => {
             try {
@@ -38,7 +35,6 @@ async function main() {
                 const limit = pageSize || 10;
                 const skip = (page - 1) * limit;
 
-                // Build a Mongo query
                 const filter = {};
                 if (query) {
                     filter.title = { $regex: query, $options: 'i' };
@@ -66,13 +62,9 @@ async function main() {
         }
     };
 
-    // 3) Create gRPC server
     const grpcServer = new grpc.Server();
     grpcServer.addService(questsearch.QuestionsService.service, questionsServiceImpl);
 
-    // 4) Instead of automatically starting gRPC on 50051,
-    // we embed the gRPC server as an "insecure" server on a random port
-    // or we can keep it local only.
     const GRPC_PORT = process.env.GRPC_PORT || '50052';
     grpcServer.bindAsync(
         `0.0.0.0:${GRPC_PORT}`,
@@ -87,20 +79,16 @@ async function main() {
         }
     );
 
-    // 5) Setup an Express HTTP server to handle REST
     const app = express();
-    const PORT = process.env.PORT || 4000; // Render expects you to listen on process.env.PORT
+    const PORT = process.env.PORT || 4000;
 
     app.get('/search', async (req, res) => {
         try {
-            // We call the gRPC method internally
-            // But we can also just do the same logic directly here
             const query = req.query.query || '';
             const page = parseInt(req.query.page || '1', 10);
             const pageSize = parseInt(req.query.pageSize || '10', 10);
             const questionType = req.query.type || '';
 
-            // Re-use the same logic:
             const filter = {};
             if (query) {
                 filter.title = { $regex: query, $options: 'i' };
