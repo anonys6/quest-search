@@ -7,7 +7,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Quest Search',
-  description: 'Search questions like super fast magic'
+  description: 'Search questions (gRPC)'
 };
 
 const lato = Lato({

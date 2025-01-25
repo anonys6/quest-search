@@ -10,40 +10,38 @@ import ProductTableAction from '@/features/products/components/product-tables/pr
 import ThemeToggle from '@/components/layout/ThemeToggle/theme-toggle';
 
 export const metadata = {
-  title: 'QuestSearch - Questions'
+    title: 'QuestSearch - Questions'
 };
 
 type pageProps = {
-  searchParams: Promise<SearchParams>;
+    searchParams: Promise<SearchParams>;
 };
 
 export default async function Page(props: pageProps) {
-  const searchParams = await props.searchParams;
-  // Allow nested RSCs to access the search params (in a type-safe way)
-  searchParamsCache.parse(searchParams);
+    const searchParams = await props.searchParams;
+    searchParamsCache.parse(searchParams);
 
-  // This key is used for invoke suspense if any of the search params changed (used for filters).
-  const key = serialize({ ...searchParams });
+    const key = serialize({ ...searchParams });
 
-  return (
-    <PageContainer>
-      <div className='space-y-4 px-24'>
-        <div className='flex items-start justify-between'>
-          <Heading
-            title='Questions'
-            description='Manage products (Server side table functionalities.)'
-          />
-          <ThemeToggle />
-        </div>
-        <Separator />
-        <ProductTableAction />
-        <Suspense
-          key={key}
-          fallback={<DataTableSkeleton columnCount={2} rowCount={10} />}
-        >
-          <ProductListingPage />
-        </Suspense>
-      </div>
-    </PageContainer>
-  );
+    return (
+        <PageContainer>
+            <div className='space-y-4 px-24'>
+                <div className='flex items-start justify-between'>
+                    <Heading
+                        title='Questions'
+                        description='Manage products (Server side table functionalities.)'
+                    />
+                    <ThemeToggle />
+                </div>
+                <Separator />
+                <ProductTableAction />
+                <Suspense
+                    key={key}
+                    fallback={<DataTableSkeleton columnCount={2} rowCount={10} />}
+                >
+                    <ProductListingPage />
+                </Suspense>
+            </div>
+        </PageContainer>
+    );
 }
